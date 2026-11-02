@@ -3,6 +3,7 @@ export default {
   nav: {
     overview: '概要',
     inventory: '在庫',
+    suppliers: 'サプライヤー',
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
@@ -103,7 +104,37 @@ export default {
       unitPrice: '単価',
       totalValue: '総価値',
       location: '場所',
+      supplier: 'サプライヤー',
       status: 'ステータス'
+    }
+  },
+
+  // Suppliers
+  suppliers: {
+    title: 'サプライヤー',
+    description: 'サプライヤーの実績と供給品目を確認',
+    allSuppliers: 'すべてのサプライヤー',
+    loadError: 'サプライヤーの読み込みに失敗しました',
+    itemsLoadError: '供給品目の読み込みに失敗しました',
+    noItems: 'このサプライヤーが供給する品目はありません',
+    suppliedItems: '供給品目',
+    contactDetails: '連絡先',
+    unknown: '不明なサプライヤー',
+    leadTimeDays: '{count}日',
+    ratingOutOf: '{rating} / 5',
+    close: '詳細を閉じる',
+    status: {
+      active: '有効',
+      inactive: '無効'
+    },
+    table: {
+      name: '名称',
+      country: '国',
+      leadTime: 'リードタイム',
+      rating: '評価',
+      itemsSupplied: '供給品目数',
+      status: 'ステータス',
+      contactEmail: '連絡先メール'
     }
   },
 

@@ -25,7 +25,19 @@ const props = defineProps({
 const ICONS = {
   overview: ['M3 3h7v9H3z', 'M14 3h7v5h-7z', 'M14 12h7v9h-7z', 'M3 16h7v5H3z'],
   inventory: ['M21 8l-9-5-9 5 9 5 9-5z', 'M3 8v8l9 5 9-5V8', 'M12 13v8'],
-  orders: ['M9 3h6a1 1 0 011 1v1H8V4a1 1 0 011-1z', 'M16 5h2a1 1 0 011 1v14a1 1 0 01-1 1H6a1 1 0 01-1-1V6a1 1 0 011-1h2', 'M9 12h6', 'M9 16h6'],
+  // Delivery truck: body, cab and two wheels
+  suppliers: [
+    'M1 5h13v11H1z',
+    'M14 9h4l4 4v3h-8',
+    'M5.5 16a2 2 0 104 0 2 2 0 00-4 0z',
+    'M16.5 16a2 2 0 104 0 2 2 0 00-4 0z'
+  ],
+  orders: [
+    'M9 3h6a1 1 0 011 1v1H8V4a1 1 0 011-1z',
+    'M16 5h2a1 1 0 011 1v14a1 1 0 01-1 1H6a1 1 0 01-1-1V6a1 1 0 011-1h2',
+    'M9 12h6',
+    'M9 16h6'
+  ],
   finance: ['M12 2v20', 'M17 6.5C17 4.8 14.8 4 12 4S7 5 7 7c0 4.5 10 2.5 10 7 0 2-2.2 3-5 3s-5-1-5-2.8'],
   demand: ['M3 3v18h18', 'M7 15l4-4 3 3 5-6'],
   restocking: ['M21 12a9 9 0 01-15.5 6.2', 'M3 12A9 9 0 0118.5 5.8', 'M18.5 2v4h-4', 'M5.5 22v-4h4'],

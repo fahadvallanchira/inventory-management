@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 from math import ceil, floor
 from typing import List, Optional
 from pydantic import BaseModel
-from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders, restock_catalog
+from mock_data import inventory_items, orders, demand_forecasts, backlog_items, spending_summary, monthly_spending, category_spending, recent_transactions, purchase_orders, restock_catalog, suppliers
 
 app = FastAPI(title="Factory Inventory Management System")
 
@@ -69,6 +69,17 @@ class InventoryItem(BaseModel):
     unit_cost: float
     location: str
     last_updated: str
+    # Optional so older data without a supplier link still validates
+    supplier_id: Optional[str] = None
+
+class Supplier(BaseModel):
+    id: str
+    name: str
+    country: str
+    contact_email: str
+    lead_time_days: int
+    rating: int
+    active: bool
 
 class Order(BaseModel):
     id: str
@@ -167,10 +178,29 @@ def root():
 @app.get("/api/inventory", response_model=List[InventoryItem])
 def get_inventory(
     warehouse: Optional[str] = None,
-    category: Optional[str] = None
+    category: Optional[str] = None,
+    supplier: Optional[str] = None
 ):
     """Get all inventory items with optional filtering"""
-    return apply_filters(inventory_items, warehouse, category)
+    items = apply_filters(inventory_items, warehouse, category)
+    # supplier is inventory-specific, so it is applied here rather than in the
+    # shared apply_filters (orders have no supplier_id). 'all' means no filter.
+    if supplier and supplier != 'all':
+        items = [item for item in items if item.get('supplier_id') == supplier]
+    return items
+
+@app.get("/api/suppliers", response_model=List[Supplier])
+def get_suppliers():
+    """Get all suppliers"""
+    return suppliers
+
+@app.get("/api/suppliers/{supplier_id}", response_model=Supplier)
+def get_supplier(supplier_id: str):
+    """Get a specific supplier"""
+    supplier = next((s for s in suppliers if s["id"] == supplier_id), None)
+    if not supplier:
+        raise HTTPException(status_code=404, detail=f"Supplier {supplier_id} not found")
+    return supplier
 
 @app.get("/api/inventory/{item_id}", response_model=InventoryItem)
 def get_inventory_item(item_id: str):
