@@ -85,7 +85,7 @@
               <!-- Left: Donut Chart -->
               <div class="order-health-chart">
                 <svg viewBox="0 0 200 200" class="donut-svg-compact">
-                  <circle cx="100" cy="100" r="65" fill="none" stroke="#e2e8f0" stroke-width="25"/>
+                  <circle cx="100" cy="100" r="65" fill="none" style="stroke: var(--border)" stroke-width="25"/>
                   <circle cx="100" cy="100" r="65" fill="none" stroke="#10b981" stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.delivered)} 408`"
                     stroke-dashoffset="0" transform="rotate(-90 100 100)"/>
@@ -746,7 +746,7 @@ export default {
 .section-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.05em;
   margin-bottom: var(--space-4);
@@ -848,7 +848,7 @@ export default {
   align-items: center;
   gap: 0.625rem;
   font-size: 0.875rem;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .legend-dot {
@@ -906,7 +906,7 @@ export default {
   align-items: center;
   gap: var(--space-2);
   font-size: 0.875rem;
-  color: #475569;
+  color: var(--text-secondary);
   font-weight: 500;
 }
 
@@ -971,7 +971,7 @@ export default {
   min-width: 120px;
   font-size: 0.875rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   flex-shrink: 0;
 }
 
@@ -1010,7 +1010,7 @@ export default {
   justify-content: space-between;
   padding-right: var(--space-4);
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--text-faint);
   border-right: 1px solid var(--border);
 }
 
@@ -1063,7 +1063,7 @@ export default {
 }
 
 .line-bar.empty-bar:hover {
-  background: #cbd5e1;
+  background: var(--border-strong);
   transform: none;
 }
 
@@ -1077,7 +1077,7 @@ export default {
 .no-data {
   padding: var(--space-8);
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-faint);
   font-size: 0.875rem;
 }
 
@@ -1196,7 +1196,7 @@ export default {
 
 .task-item.completed .task-text {
   text-decoration: line-through;
-  color: #94a3b8;
+  color: var(--text-faint);
 }
 
 .task-checkbox {

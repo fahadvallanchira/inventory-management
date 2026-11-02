@@ -143,7 +143,7 @@ const handleLogout = () => {
 
 .profile-button:hover {
   background: var(--bg);
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
 }
 
 .avatar {

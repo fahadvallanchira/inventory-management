@@ -239,18 +239,18 @@ const formatDate = (dateString) => {
 }
 
 .priority-badge.high {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--danger-tint);
+  color: var(--danger-ink);
 }
 
 .priority-badge.medium {
-  background: #fed7aa;
-  color: #92400e;
+  background: var(--warning-tint);
+  color: var(--warning-ink);
 }
 
 .priority-badge.low {
   background: var(--info-soft);
-  color: #1e40af;
+  color: var(--info-ink);
 }
 
 .shortage-summary {
@@ -267,12 +267,12 @@ const formatDate = (dateString) => {
 }
 
 .summary-card.danger {
-  border-color: #fecaca;
+  border-color: var(--danger-tint);
   background: var(--danger-soft);
 }
 
 .summary-card.warning {
-  border-color: #fed7aa;
+  border-color: var(--warning-tint);
   background: var(--warning-soft);
 }
 
@@ -354,7 +354,7 @@ const formatDate = (dateString) => {
 
 .btn-secondary:hover {
   background: var(--border);
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
 }
 
 /* Modal transition animations */

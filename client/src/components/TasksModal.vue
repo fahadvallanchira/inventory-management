@@ -323,7 +323,7 @@ export default {
 .btn-secondary {
   padding: 0.75rem 1.5rem;
   background: var(--bg);
-  color: #475569;
+  color: var(--text-secondary);
   border: none;
   border-radius: 8px;
   font-weight: 600;
@@ -372,7 +372,7 @@ export default {
 label {
   font-size: 0.875rem;
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
 }
 
 .task-input,
@@ -447,7 +447,7 @@ label {
 }
 
 .task-item:hover {
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
@@ -502,7 +502,7 @@ label {
 
 .task-item.completed .task-title {
   text-decoration: line-through;
-  color: #94a3b8;
+  color: var(--text-faint);
 }
 
 .task-delete-btn {
@@ -544,18 +544,18 @@ label {
 }
 
 .priority-badge.high {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--danger-tint);
+  color: var(--danger-ink);
 }
 
 .priority-badge.medium {
-  background: #fed7aa;
-  color: #92400e;
+  background: var(--warning-tint);
+  color: var(--warning-ink);
 }
 
 .priority-badge.low {
   background: var(--info-soft);
-  color: #1e40af;
+  color: var(--info-ink);
 }
 
 .task-due-date {
@@ -567,7 +567,7 @@ label {
 }
 
 .task-due-date svg {
-  color: #94a3b8;
+  color: var(--text-faint);
 }
 
 .status-badge {
@@ -579,23 +579,23 @@ label {
 }
 
 .status-badge.overdue {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--danger-tint);
+  color: var(--danger-ink);
 }
 
 .status-badge.urgent {
-  background: #fed7aa;
-  color: #92400e;
+  background: var(--warning-tint);
+  color: var(--warning-ink);
 }
 
 .status-badge.upcoming {
   background: var(--info-soft);
-  color: #1e40af;
+  color: var(--info-ink);
 }
 
 .status-badge.completed {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--success-tint);
+  color: var(--success-ink);
 }
 
 /* Modal transitions */

@@ -449,17 +449,17 @@ export default {
 
 .badge.success {
   background: var(--success-soft);
-  color: #166534;
+  color: var(--success-ink);
 }
 
 .badge.warning {
   background: var(--warning-soft);
-  color: #92400e;
+  color: var(--warning-ink);
 }
 
 .badge.danger {
   background: var(--danger-soft);
-  color: #991b1b;
+  color: var(--danger-ink);
 }
 
 .positive-change {
@@ -480,7 +480,7 @@ export default {
 
 .error {
   background: var(--danger-soft);
-  color: #991b1b;
+  color: var(--danger-ink);
   padding: var(--space-4);
   border-radius: var(--radius);
   margin: var(--space-4) 0;

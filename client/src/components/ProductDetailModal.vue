@@ -246,18 +246,18 @@ const getStockBadgeClass = (stockLevel) => {
 }
 
 .stock-badge.success {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--success-tint);
+  color: var(--success-ink);
 }
 
 .stock-badge.warning {
-  background: #fed7aa;
-  color: #92400e;
+  background: var(--warning-tint);
+  color: var(--warning-ink);
 }
 
 .stock-badge.danger {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--danger-tint);
+  color: var(--danger-ink);
 }
 
 .info-grid {
@@ -309,7 +309,7 @@ const getStockBadgeClass = (stockLevel) => {
 
 .btn-secondary:hover {
   background: var(--border);
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
 }
 
 /* Modal transition animations */

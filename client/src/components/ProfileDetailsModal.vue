@@ -254,7 +254,7 @@ const formatDate = (dateString) => {
 
 .btn-secondary:hover {
   background: var(--border);
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
 }
 
 /* Modal transition animations */
