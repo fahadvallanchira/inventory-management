@@ -226,15 +226,15 @@ export default {
 
 <style scoped>
 .page-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 .page-header h2 {
-  margin-bottom: 0.25rem;
+  margin-bottom: var(--space-1);
 }
 
 .page-header p {
-  color: #64748b;
+  color: var(--text-muted);
   font-size: 0.875rem;
 }
 
@@ -242,15 +242,15 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 1.5rem;
-  padding: 1.25rem 1.5rem;
-  border-bottom: 1px solid #e2e8f0;
+  gap: var(--space-6);
+  padding: 1.25rem var(--space-6);
+  border-bottom: 1px solid var(--border);
 }
 
 .card-title {
   font-size: 1rem;
   font-weight: 600;
-  color: #0f172a;
+  color: var(--text);
   margin: 0;
 }
 
@@ -258,7 +258,7 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  min-width: 300px;
+  min-width: min(300px, 100%);
 }
 
 .search-icon {
@@ -272,19 +272,19 @@ export default {
 
 .search-input {
   width: 100%;
-  padding: 0.5rem 2.5rem 0.5rem 2.5rem;
+  padding: var(--space-2) 2.5rem var(--space-2) 2.5rem;
   border: 1px solid #cbd5e1;
-  border-radius: 8px;
+  border-radius: var(--radius);
   font-size: 0.875rem;
-  color: #0f172a;
-  background: #f8fafc;
+  color: var(--text);
+  background: var(--bg);
   transition: all 0.2s;
 }
 
 .search-input:focus {
   outline: none;
-  border-color: #3b82f6;
-  background: white;
+  border-color: var(--info);
+  background: var(--surface);
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
@@ -298,18 +298,18 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.25rem;
+  padding: var(--space-1);
   background: transparent;
   border: none;
-  border-radius: 4px;
+  border-radius: var(--radius-sm);
   color: #94a3b8;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .clear-search:hover {
-  background: #e2e8f0;
-  color: #64748b;
+  background: var(--border);
+  color: var(--text-muted);
 }
 
 .clear-search svg {
@@ -319,13 +319,13 @@ export default {
 
 .loading,
 .error {
-  padding: 2rem;
+  padding: var(--space-8);
   text-align: center;
-  color: #64748b;
+  color: var(--text-muted);
 }
 
 .error {
-  color: #ef4444;
+  color: var(--danger);
 }
 
 .clickable-row {
@@ -334,6 +334,6 @@ export default {
 }
 
 .clickable-row:hover {
-  background: #eff6ff !important;
+  background: var(--info-soft) !important;
 }
 </style>

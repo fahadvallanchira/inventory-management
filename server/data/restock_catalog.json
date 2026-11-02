@@ -1,0 +1,21 @@
+{
+  "lead_times": {
+    "Actuators": 14,
+    "Circuit Boards": 10,
+    "Controllers": 21,
+    "Power Supplies": 12,
+    "Sensors": 7,
+    "default": 14
+  },
+  "items": {
+    "WDG-001": {"category": "Actuators", "unit_cost": 45.00, "current_stock": 180},
+    "BRG-102": {"category": "Actuators", "unit_cost": 120.00, "current_stock": 140},
+    "GSK-203": {"category": "Actuators", "unit_cost": 8.50, "current_stock": 220},
+    "MTR-304": {"category": "Actuators", "unit_cost": 310.00, "current_stock": 60},
+    "FLT-405": {"category": "Sensors", "unit_cost": 12.75, "current_stock": 300},
+    "VLV-506": {"category": "Actuators", "unit_cost": 85.00, "current_stock": 90},
+    "PSU-501": {"category": "Power Supplies", "unit_cost": 18.99, "current_stock": 0},
+    "SNR-420": {"category": "Sensors", "unit_cost": 62.00, "current_stock": 100},
+    "CTL-330": {"category": "Controllers", "unit_cost": 210.00, "current_stock": 40}
+  }
+}

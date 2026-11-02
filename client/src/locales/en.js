@@ -6,8 +6,12 @@ export default {
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
+    restocking: 'Restocking',
+    reports: 'Reports',
     companyName: 'Catalyst Components',
-    subtitle: 'Inventory Management System'
+    subtitle: 'Inventory Management System',
+    collapseSidebar: 'Collapse sidebar',
+    expandSidebar: 'Expand sidebar'
   },
 
   // Dashboard
@@ -112,6 +116,16 @@ export default {
     onTimeDelivery: 'On-Time Delivery',
     itemsCount: '{count} items',
     quantity: 'Qty',
+    submittedOrders: 'Submitted Orders',
+    submittedDescription: 'Restocking orders placed from the Restocking tab',
+    submittedEmpty: 'No restocking orders have been submitted yet',
+    submittedLoadError: 'Failed to load submitted orders',
+    leadTimeDays: '{count} days',
+    submittedTable: {
+      submittedDate: 'Submitted',
+      totalCost: 'Total Cost',
+      leadTime: 'Lead Time'
+    },
     table: {
       orderNumber: 'Order Number',
       orderId: 'Order ID',
@@ -126,6 +140,47 @@ export default {
       status: 'Status',
       expectedDelivery: 'Expected Delivery',
       actualDelivery: 'Actual Delivery'
+    }
+  },
+
+  // Restocking
+  restocking: {
+    title: 'Restocking',
+    description: 'Choose a budget and review recommended restock quantities for items below target stock',
+    budget: 'Budget',
+    budgetMax: 'Max: {amount}',
+    recommendations: 'Recommended Restock',
+    loadError: 'Failed to load recommendations',
+    empty: 'This budget does not cover any recommended items. Increase the budget to see recommendations.',
+    table: {
+      include: 'Include',
+      item: 'Item',
+      category: 'Category',
+      trend: 'Demand Trend',
+      shortfall: 'Shortfall',
+      quantity: 'Order Qty',
+      unitCost: 'Unit Cost',
+      lineCost: 'Line Cost',
+      leadTime: 'Lead Time'
+    },
+    days: '{count} days',
+    summary: {
+      selectedTotal: 'Selected Total',
+      budget: 'Budget',
+      remaining: 'Remaining Budget',
+      leadTime: 'Order Lead Time',
+      itemsSelected: '{count} items selected'
+    },
+    overBudget: 'The selected total exceeds the budget. Reduce quantities or deselect items to place the order.',
+    placeOrder: 'Place Order',
+    submitting: 'Submitting...',
+    submitError: 'Failed to place order',
+    confirmation: {
+      title: 'Order placed',
+      orderNumber: 'Order number',
+      leadTime: 'Lead time',
+      expectedDelivery: 'Expected delivery',
+      viewOrders: 'View submitted orders'
     }
   },
 

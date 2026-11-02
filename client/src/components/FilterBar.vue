@@ -102,18 +102,19 @@ export default {
 
 <style scoped>
 .filters-bar {
-  background: #f8fafc;
-  border-bottom: 1px solid #e2e8f0;
-  padding: 0.75rem 0;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: var(--space-3) 0;
+  /* sticks to the top of the scrolling content column (the old top bar is gone) */
   position: sticky;
-  top: 70px;
+  top: 0;
   z-index: 90;
 }
 
 .filters-container {
-  max-width: 1600px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 2rem;
+  padding: 0 var(--space-8);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -121,9 +122,16 @@ export default {
 
 .filters-grid {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
   flex: 1;
+}
+
+@media (max-width: 639.98px) {
+  .filters-container {
+    padding: 0 var(--space-4);
+  }
 }
 
 .filter-group {
@@ -135,17 +143,18 @@ export default {
 .filter-group label {
   font-size: 0.75rem;
   font-weight: 600;
-  color: #64748b;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .filter-select {
-  padding: 0.4rem 0.75rem;
-  border: 1px solid #cbd5e1;
+  height: 36px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--border);
   border-radius: 6px;
   font-size: 0.813rem;
-  color: #0f172a;
-  background: white;
+  color: var(--text);
+  background: var(--surface);
   cursor: pointer;
   transition: all 0.2s;
   font-weight: 500;
@@ -156,30 +165,31 @@ export default {
   border-color: #94a3b8;
 }
 
-.filter-select:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+.filter-select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  border-color: var(--accent);
 }
 
 .reset-filters-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0.4rem;
-  background: white;
-  border: 1px solid #e2e8f0;
+  width: 36px;
+  height: 36px;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #64748b;
+  color: var(--text-muted);
   cursor: pointer;
   transition: all 0.2s;
   flex-shrink: 0;
 }
 
 .reset-filters-btn:hover:not(:disabled) {
-  background: #f8fafc;
+  background: var(--bg);
   border-color: #cbd5e1;
-  color: #0f172a;
+  color: var(--text);
 }
 
 .reset-filters-btn:disabled {

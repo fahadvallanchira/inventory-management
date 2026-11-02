@@ -6,8 +6,12 @@ export default {
     orders: '注文',
     finance: '財務',
     demandForecast: '需要予測',
+    restocking: '補充発注',
+    reports: 'レポート',
     companyName: '触媒コンポーネンツ',
-    subtitle: '在庫管理システム'
+    subtitle: '在庫管理システム',
+    collapseSidebar: 'サイドバーを折りたたむ',
+    expandSidebar: 'サイドバーを展開'
   },
 
   // Dashboard
@@ -112,6 +116,16 @@ export default {
     onTimeDelivery: '定時配達',
     itemsCount: '{count}件',
     quantity: '数量',
+    submittedOrders: '発注済み注文',
+    submittedDescription: '補充発注タブから行われた発注',
+    submittedEmpty: '発注済みの補充注文はまだありません',
+    submittedLoadError: '発注済み注文の読み込みに失敗しました',
+    leadTimeDays: '{count}日',
+    submittedTable: {
+      submittedDate: '発注日',
+      totalCost: '合計コスト',
+      leadTime: 'リードタイム'
+    },
     table: {
       orderNumber: '注文番号',
       orderId: '注文ID',
@@ -164,6 +178,47 @@ export default {
       vendor: 'ベンダー',
       date: '日付',
       amount: '金額'
+    }
+  },
+
+  // 補充発注
+  restocking: {
+    title: '補充発注',
+    description: '予算を選択して、目標在庫を下回る品目の推奨補充数量を確認します',
+    budget: '予算',
+    budgetMax: '上限: {amount}',
+    recommendations: '推奨補充品目',
+    loadError: '推奨内容の読み込みに失敗しました',
+    empty: 'この予算では推奨品目を発注できません。予算を増やしてください。',
+    table: {
+      include: '選択',
+      item: '品目',
+      category: 'カテゴリ',
+      trend: '需要トレンド',
+      shortfall: '不足数',
+      quantity: '発注数量',
+      unitCost: '単価',
+      lineCost: '明細金額',
+      leadTime: 'リードタイム'
+    },
+    days: '{count}日',
+    summary: {
+      selectedTotal: '選択合計',
+      budget: '予算',
+      remaining: '残り予算',
+      leadTime: '注文リードタイム',
+      itemsSelected: '{count}件選択中'
+    },
+    overBudget: '選択合計が予算を超えています。数量を減らすか品目の選択を外してください。',
+    placeOrder: '発注する',
+    submitting: '送信中...',
+    submitError: '発注に失敗しました',
+    confirmation: {
+      title: '発注が完了しました',
+      orderNumber: '注文番号',
+      leadTime: 'リードタイム',
+      expectedDelivery: '納品予定日',
+      viewOrders: '発注済み注文を表示'
     }
   },
 

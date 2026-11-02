@@ -37,3 +37,6 @@ purchase_orders = load_json_file('purchase_orders.json')
 
 # All data is now loaded from JSON files in the data/ directory
 # This allows for easier maintenance and updates of the sample data
+
+# Load restocking catalog (fallback cost/stock/category for forecast SKUs, and lead times by category)
+restock_catalog = load_json_file('restock_catalog.json')

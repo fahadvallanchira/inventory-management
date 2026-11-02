@@ -1,8 +1,12 @@
 <template>
-  <div class="language-switcher">
+  <div class="language-switcher" :class="{ collapsed }">
     <button
       class="language-button"
       @click="toggleDropdown"
+      :title="localeName"
+      :aria-label="collapsed ? localeName : null"
+      aria-haspopup="true"
+      :aria-expanded="String(isDropdownOpen)"
       @blur="handleBlur"
     >
       <svg
@@ -56,6 +60,9 @@
 
 <script setup>
 import { ref } from 'vue'
+
+// collapsed: sidebar is in icons-only mode (globe icon only, dropdown opens to the right)
+defineProps({ collapsed: { type: Boolean, default: false } })
 import { useI18n } from '../composables/useI18n'
 
 const { currentLocale, setLocale, availableLocales, localeName } = useI18n()
@@ -94,36 +101,39 @@ const selectLanguage = (locale) => {
 }
 
 .language-button {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
   padding: 0.5rem 0.875rem;
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 8px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-family: inherit;
   font-size: 0.875rem;
-  color: #334155;
+  color: var(--text);
 }
 
 .language-button:hover {
-  background: #f8fafc;
+  background: var(--bg);
   border-color: #cbd5e1;
 }
 
 .globe-icon {
-  color: #64748b;
+  color: var(--text-muted);
   flex-shrink: 0;
 }
 
 .language-label {
+  flex: 1;
+  text-align: left;
   font-weight: 500;
 }
 
 .chevron {
-  color: #64748b;
+  color: var(--text-muted);
   transition: transform 0.2s ease;
   flex-shrink: 0;
 }
@@ -132,13 +142,32 @@ const selectLanguage = (locale) => {
   transform: rotate(180deg);
 }
 
+/* Icons-only: hide text + chevron, center the globe. Label stays reachable via aria-label/title. */
+.collapsed .language-button {
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+.collapsed .language-label,
+.collapsed .chevron {
+  display: none;
+}
+
+/* Collapsed sidebar is 64px wide and the footer would clip an upward menu,
+   so open to the right of the rail, bottom-aligned with the button. */
+.collapsed .dropdown-menu {
+  bottom: 0;
+  left: calc(100% + var(--space-4));
+}
+
 .dropdown-menu {
   position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
+  /* sidebar footer sits at the bottom, so open upward and align left */
+  bottom: calc(100% + var(--space-2));
+  left: 0;
   min-width: 160px;
-  background: white;
-  border: 1px solid #e2e8f0;
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 10px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   z-index: 1000;
@@ -160,16 +189,16 @@ const selectLanguage = (locale) => {
   font-family: inherit;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #334155;
+  color: var(--text);
 }
 
 .dropdown-item:hover {
-  background: #f8fafc;
+  background: var(--bg);
 }
 
 .dropdown-item.active {
-  background: #eff6ff;
-  color: #2563eb;
+  background: var(--info-soft);
+  color: var(--info);
 }
 
 .language-name {
@@ -177,7 +206,7 @@ const selectLanguage = (locale) => {
 }
 
 .check-icon {
-  color: #2563eb;
+  color: var(--info);
   flex-shrink: 0;
 }
 </style>

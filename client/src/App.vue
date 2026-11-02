@@ -1,42 +1,65 @@
 <template>
-  <div class="app">
-    <header class="top-nav">
-      <div class="nav-container">
-        <div class="logo">
-          <h1>{{ t('nav.companyName') }}</h1>
-          <span class="subtitle">{{ t('nav.subtitle') }}</span>
+  <!-- Shell: [sidebar | content] grid. Only .content scrolls (sidebar is sticky, 100vh). -->
+  <div class="app" :class="{ 'is-collapsed': collapsed }">
+    <aside id="app-sidebar" class="sidebar">
+      <div class="sidebar-brand" :title="collapsed ? t('nav.companyName') : null">
+        <span class="brand-mark" aria-hidden="true">{{ t('nav.companyName').charAt(0) }}</span>
+        <div class="brand-text">
+          <span class="brand-name">{{ t('nav.companyName') }}</span>
+          <span class="brand-subtitle">{{ t('nav.subtitle') }}</span>
         </div>
-        <nav class="nav-tabs">
-          <router-link to="/" :class="{ active: $route.path === '/' }">
-            {{ t('nav.overview') }}
-          </router-link>
-          <router-link to="/inventory" :class="{ active: $route.path === '/inventory' }">
-            {{ t('nav.inventory') }}
-          </router-link>
-          <router-link to="/orders" :class="{ active: $route.path === '/orders' }">
-            {{ t('nav.orders') }}
-          </router-link>
-          <router-link to="/spending" :class="{ active: $route.path === '/spending' }">
-            {{ t('nav.finance') }}
-          </router-link>
-          <router-link to="/demand" :class="{ active: $route.path === '/demand' }">
-            {{ t('nav.demandForecast') }}
-          </router-link>
-          <router-link to="/reports" :class="{ active: $route.path === '/reports' }">
-            Reports
-          </router-link>
-        </nav>
-        <LanguageSwitcher />
+      </div>
+
+      <nav class="sidebar-nav" aria-label="Main">
+        <!-- Active state comes from router-link-exact-active (exact, so '/' is not active on every page) -->
+        <router-link
+          v-for="item in navItems"
+          :key="item.to"
+          :to="item.to"
+          class="nav-item"
+          :title="t(item.labelKey)"
+        >
+          <NavIcon :name="item.icon" />
+          <span class="nav-label">{{ t(item.labelKey) }}</span>
+        </router-link>
+      </nav>
+
+      <!-- Controls that used to live in the top bar. Dropdowns open upward when expanded
+           and to the right of the rail when collapsed (the `collapsed` prop). -->
+      <div class="sidebar-footer">
+        <button
+          type="button"
+          class="sidebar-toggle"
+          :aria-label="toggleLabel"
+          :title="toggleLabel"
+          :aria-expanded="String(!collapsed)"
+          aria-controls="app-sidebar"
+          @click="toggleSidebar"
+        >
+          <!-- Panel icon; the chevron flips direction via CSS when collapsed -->
+          <svg class="nav-icon toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="4" width="18" height="16" rx="2" />
+            <path d="M9 4v16" />
+            <path class="toggle-chevron" d="M16 9l-3 3 3 3" />
+          </svg>
+          <span class="nav-label">{{ toggleLabel }}</span>
+        </button>
+        <LanguageSwitcher :collapsed="collapsed" />
         <ProfileMenu
+          :collapsed="collapsed"
           @show-profile-details="showProfileDetails = true"
           @show-tasks="showTasks = true"
         />
       </div>
-    </header>
-    <FilterBar />
-    <main class="main-content">
-      <router-view />
-    </main>
+    </aside>
+
+    <div class="content">
+      <FilterBar />
+      <main class="main-content">
+        <router-view />
+      </main>
+    </div>
 
     <ProfileDetailsModal
       :is-open="showProfileDetails"
@@ -55,7 +78,7 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from 'vue'
+import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { api } from './api'
 import { useAuth } from './composables/useAuth'
 import { useI18n } from './composables/useI18n'
@@ -64,6 +87,7 @@ import ProfileMenu from './components/ProfileMenu.vue'
 import ProfileDetailsModal from './components/ProfileDetailsModal.vue'
 import TasksModal from './components/TasksModal.vue'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
+import NavIcon from './components/NavIcon.vue'
 
 export default {
   name: 'App',
@@ -72,7 +96,8 @@ export default {
     ProfileMenu,
     ProfileDetailsModal,
     TasksModal,
-    LanguageSwitcher
+    LanguageSwitcher,
+    NavIcon
   },
   setup() {
     const { currentUser } = useAuth()
@@ -80,6 +105,67 @@ export default {
     const showProfileDetails = ref(false)
     const showTasks = ref(false)
     const apiTasks = ref([])
+
+    // Sidebar navigation, data-driven so new items (or a collapsed icons-only
+    // mode, which only needs to hide .nav-label) don't require template edits.
+    // `to` is the route path and doubles as the v-for key; `labelKey` is an i18n key;
+    // `icon` is a NavIcon name.
+    const navItems = [
+      { to: '/', labelKey: 'nav.overview', icon: 'overview' },
+      { to: '/inventory', labelKey: 'nav.inventory', icon: 'inventory' },
+      { to: '/orders', labelKey: 'nav.orders', icon: 'orders' },
+      { to: '/spending', labelKey: 'nav.finance', icon: 'finance' },
+      { to: '/demand', labelKey: 'nav.demandForecast', icon: 'demand' },
+      { to: '/restocking', labelKey: 'nav.restocking', icon: 'restocking' },
+      { to: '/reports', labelKey: 'nav.reports', icon: 'reports' }
+    ]
+
+    // ---- Collapsible sidebar ----
+    // Effective state = the user's saved choice if there is one, otherwise the
+    // viewport default (collapsed below 1024px). A manual toggle therefore
+    // always wins over the breakpoint, and is persisted.
+    const STORAGE_KEY = 'sidebar-collapsed'
+    const NARROW_QUERY = '(max-width: 1023.98px)'
+
+    // localStorage can throw (private mode, blocked site data), so every access is guarded.
+    const readStoredPref = () => {
+      try {
+        const v = localStorage.getItem(STORAGE_KEY)
+        return v === 'true' ? true : v === 'false' ? false : null
+      } catch (e) {
+        return null
+      }
+    }
+    const writeStoredPref = (value) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, String(value))
+      } catch (e) {
+        /* storage unavailable: the choice just lasts for this session */
+      }
+    }
+
+    const userPref = ref(readStoredPref()) // true | false | null (no manual choice)
+    const isNarrow = ref(false)
+    const collapsed = computed(() => (userPref.value !== null ? userPref.value : isNarrow.value))
+    const toggleLabel = computed(() =>
+      collapsed.value ? t('nav.expandSidebar') : t('nav.collapseSidebar')
+    )
+
+    const toggleSidebar = () => {
+      userPref.value = !collapsed.value
+      writeStoredPref(userPref.value)
+    }
+
+    let mql = null
+    const onMediaChange = (e) => { isNarrow.value = e.matches }
+    if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
+      mql = window.matchMedia(NARROW_QUERY)
+      isNarrow.value = mql.matches // set before first render to avoid a flash of the wrong width
+      mql.addEventListener('change', onMediaChange)
+    }
+    onUnmounted(() => {
+      if (mql) mql.removeEventListener('change', onMediaChange)
+    })
 
     // Merge mock tasks from currentUser with API tasks
     const tasks = computed(() => {
@@ -150,6 +236,10 @@ export default {
 
     return {
       t,
+      navItems,
+      collapsed,
+      toggleLabel,
+      toggleSidebar,
       showProfileDetails,
       showTasks,
       tasks,
@@ -162,6 +252,42 @@ export default {
 </script>
 
 <style>
+/* ---------- Design tokens: the only place raw values live ---------- */
+:root {
+  /* color */
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --border: #e2e8f0;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --accent: #4f46e5;
+  --accent-soft: #eef2ff;
+  --success: #16a34a;
+  --info: #2563eb;
+  --warning: #d97706;
+  --danger: #dc2626;
+  /* Tinted backgrounds for status badges (derived from the status colors above) */
+  --success-soft: #dcfce7;
+  --info-soft: #dbeafe;
+  --warning-soft: #fef3c7;
+  --danger-soft: #fee2e2;
+  /* spacing: 4px base */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  /* shape */
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  /* layout */
+  --sidebar-width: 240px;
+  --sidebar-width-collapsed: 64px;
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -169,202 +295,319 @@ export default {
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background: #f8fafc;
-  color: #1e293b;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-.app {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
-.top-nav {
-  background: #ffffff;
-  border-bottom: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.05);
+/* ---------- Shell ---------- */
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  min-height: 100vh;
+  /* Animating the track size slides the content over smoothly (modern browsers interpolate grid tracks) */
+  transition: grid-template-columns 0.2s ease;
+}
+
+.app.is-collapsed {
+  grid-template-columns: var(--sidebar-width-collapsed) 1fr;
+}
+
+.sidebar {
   position: sticky;
   top: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
   z-index: 100;
 }
 
-.nav-container {
-  max-width: 1600px;
-  margin: 0 auto;
+.sidebar-brand {
   display: flex;
   align-items: center;
-  padding: 0 2rem;
-  height: 70px;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-4) var(--space-6);
 }
 
-.nav-container > .nav-tabs {
-  margin-left: auto;
-  margin-right: 1rem;
-}
-
-.nav-container > .language-switcher {
-  margin-right: 1rem;
-}
-
-.logo {
+.brand-mark {
+  flex-shrink: 0;
+  width: 32px;
+  height: 32px;
   display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 16px;
 }
 
-.logo h1 {
-  font-size: 1.375rem;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
-}
-
-.subtitle {
-  font-size: 0.813rem;
-  color: #64748b;
-  font-weight: 400;
-  padding-left: 0.75rem;
-  border-left: 1px solid #e2e8f0;
-}
-
-.nav-tabs {
+.brand-text {
   display: flex;
-  gap: 0.25rem;
+  flex-direction: column;
+  min-width: 0;
 }
 
-.nav-tabs a {
-  padding: 0.625rem 1.25rem;
-  color: #64748b;
-  text-decoration: none;
-  font-weight: 500;
-  font-size: 0.938rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+.brand-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.brand-subtitle {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sidebar-nav {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding: 0 var(--space-3);
+  overflow-y: auto;
+  overflow-x: hidden; /* labels are nowrap; never let them create a horizontal scrollbar mid-transition */
+}
+
+.nav-item {
   position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 40px;
+  padding: 0 var(--space-3);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.nav-tabs a:hover {
-  color: #0f172a;
-  background: #f1f5f9;
+.nav-item .nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
-.nav-tabs a.active {
-  color: #2563eb;
-  background: #eff6ff;
+.nav-item:hover {
+  background: var(--accent-soft);
+  color: var(--text);
 }
 
-.nav-tabs a.active::after {
+.nav-item.router-link-exact-active {
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* 3px accent bar so the active item is not signalled by color alone */
+.nav-item.router-link-exact-active::before {
   content: '';
   position: absolute;
-  bottom: -1px;
   left: 0;
-  right: 0;
-  height: 2px;
-  background: #2563eb;
+  top: 8px;
+  bottom: 8px;
+  width: 3px;
+  border-radius: 0 3px 3px 0;
+  background: var(--accent);
+}
+
+.sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  border-top: 1px solid var(--border);
+}
+
+/* Toggle button: styled like a nav item but is a <button> */
+.sidebar-toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  height: 40px;
+  padding: 0 var(--space-3);
+  border: none;
+  border-radius: var(--radius-sm);
+  background: none;
+  color: var(--text-muted);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-toggle:hover {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+.sidebar-toggle .nav-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+}
+
+/* Chevron points left (= collapse) when expanded; mirrored when collapsed (= expand) */
+.toggle-chevron {
+  transform-origin: 14.5px 12px;
+  transition: transform 0.2s ease;
+}
+
+.is-collapsed .toggle-chevron {
+  transform: scaleX(-1);
+}
+
+/* ---------- Collapsed (icons-only) rail ---------- */
+.is-collapsed .sidebar-brand {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.is-collapsed .brand-text {
+  display: none;
+}
+
+/* Labels are visually hidden, not display:none, so links/buttons keep an accessible name.
+   (Nav links also carry a title tooltip.) */
+.is-collapsed .nav-label {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.is-collapsed .nav-item,
+.is-collapsed .sidebar-toggle {
+  justify-content: center;
+  padding: 0;
+}
+
+.is-collapsed .sidebar-footer {
+  align-items: stretch;
+}
+
+.content {
+  min-width: 0; /* let wide tables scroll inside cards instead of stretching the grid column */
 }
 
 .main-content {
-  flex: 1;
-  max-width: 1600px;
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
-  padding: 1.5rem 2rem;
+  padding: var(--space-8);
 }
 
+/* Phones: the sidebar stays as the 64px rail; reclaim horizontal room for content */
+@media (max-width: 639.98px) {
+  .main-content {
+    padding: var(--space-4);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app,
+  .toggle-chevron {
+    transition: none;
+  }
+}
+
+/* ---------- Shared components ---------- */
 .page-header {
-  margin-bottom: 1.5rem;
+  margin-bottom: var(--space-6);
 }
 
 .page-header h2 {
-  font-size: 1.875rem;
-  font-weight: 700;
-  color: #0f172a;
-  margin-bottom: 0.375rem;
-  letter-spacing: -0.025em;
+  font-size: 24px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: var(--space-1);
 }
 
 .page-header p {
-  color: #64748b;
-  font-size: 0.938rem;
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.25rem;
-  margin-bottom: 1.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: var(--space-4);
+  margin-bottom: var(--space-6);
 }
 
 .stat-card {
-  background: white;
-  padding: 1.25rem;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  transition: all 0.2s ease;
-}
-
-.stat-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  background: var(--surface);
+  padding: var(--space-6);
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
 }
 
 .stat-label {
-  color: #64748b;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.625rem;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: var(--space-2);
 }
 
 .stat-value {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--text);
 }
 
-.stat-card.warning .stat-value {
-  color: #ea580c;
-}
-
-.stat-card.success .stat-value {
-  color: #059669;
-}
-
-.stat-card.danger .stat-value {
-  color: #dc2626;
-}
-
-.stat-card.info .stat-value {
-  color: #2563eb;
-}
+/* Status variants keep the card white and only tint the value (no colored card backgrounds) */
+.stat-card.warning .stat-value { color: var(--warning); }
+.stat-card.success .stat-value { color: var(--success); }
+.stat-card.danger .stat-value { color: var(--danger); }
+.stat-card.info .stat-value { color: var(--info); }
 
 .card {
-  background: white;
-  border-radius: 10px;
-  padding: 1.25rem;
-  border: 1px solid #e2e8f0;
-  margin-bottom: 1.25rem;
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: var(--space-6);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-6);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.875rem;
-  border-bottom: 1px solid #e2e8f0;
+  margin-bottom: var(--space-4);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--border);
 }
 
 .card-title {
-  font-size: 1.125rem;
-  font-weight: 700;
-  color: #0f172a;
-  letter-spacing: -0.025em;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
 }
 
 .table-container {
@@ -377,26 +620,25 @@ table {
 }
 
 thead {
-  background: #f8fafc;
-  border-top: 1px solid #e2e8f0;
-  border-bottom: 1px solid #e2e8f0;
+  background: var(--bg);
 }
 
 th {
   text-align: left;
-  padding: 0.5rem 0.75rem;
+  padding: var(--space-3);
   font-weight: 600;
-  color: #475569;
-  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 td {
-  padding: 0.5rem 0.75rem;
-  border-top: 1px solid #f1f5f9;
-  color: #334155;
-  font-size: 0.875rem;
+  height: 48px; /* acts as min row height on table cells */
+  padding: 0 var(--space-3);
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  font-size: 14px;
 }
 
 tbody tr {
@@ -404,83 +646,88 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: #f8fafc;
+  background: var(--accent-soft);
 }
 
 .badge {
   display: inline-block;
-  padding: 0.313rem 0.75rem;
-  border-radius: 6px;
-  font-size: 0.75rem;
+  padding: var(--space-1) var(--space-2);
+  border-radius: var(--radius-sm);
+  font-size: 12px;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.025em;
 }
 
-.badge.success {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.badge.warning {
-  background: #fed7aa;
-  color: #92400e;
-}
-
-.badge.danger {
-  background: #fecaca;
-  color: #991b1b;
-}
-
-.badge.info {
-  background: #dbeafe;
-  color: #1e40af;
-}
-
+/* Status badges: soft tint + strong text, mapped onto the four status tokens */
+.badge.success,
 .badge.increasing {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--success-soft);
+  color: var(--success);
 }
 
-.badge.decreasing {
-  background: #fecaca;
-  color: #991b1b;
+.badge.warning,
+.badge.medium {
+  background: var(--warning-soft);
+  color: var(--warning);
+}
+
+.badge.danger,
+.badge.decreasing,
+.badge.high {
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.badge.info,
+.badge.low {
+  background: var(--info-soft);
+  color: var(--info);
 }
 
 .badge.stable {
-  background: #e0e7ff;
-  color: #3730a3;
+  background: var(--accent-soft);
+  color: var(--accent);
 }
 
-.badge.high {
-  background: #fecaca;
-  color: #991b1b;
+/* Global button looks. Views with their own .btn-* scoped rules keep working; these only supply defaults. */
+.btn-primary,
+.btn-secondary {
+  height: 36px;
+  padding: 0 var(--space-4);
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
 }
 
-.badge.medium {
-  background: #fed7aa;
-  color: #92400e;
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: 1px solid var(--accent);
 }
 
-.badge.low {
-  background: #dbeafe;
-  color: #1e40af;
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border: 1px solid var(--border);
 }
 
 .loading {
   text-align: center;
-  padding: 3rem;
-  color: #64748b;
-  font-size: 0.938rem;
+  padding: var(--space-8);
+  color: var(--text-muted);
+  font-size: 14px;
 }
 
 .error {
-  background: #fef2f2;
-  border: 1px solid #fecaca;
-  color: #991b1b;
-  padding: 1rem;
-  border-radius: 8px;
-  margin: 1rem 0;
-  font-size: 0.938rem;
+  background: var(--danger-soft);
+  border: 1px solid var(--danger);
+  color: var(--danger);
+  padding: var(--space-4);
+  border-radius: var(--radius-sm);
+  margin: var(--space-4) 0;
+  font-size: 14px;
 }
 </style>
