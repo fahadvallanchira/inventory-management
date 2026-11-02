@@ -176,6 +176,16 @@ export default {
     }
   },
 
+  // Low-stock alerts (banner + nav badge)
+  alerts: {
+    lowStockTitle: 'Low stock alert',
+    lowStockSummary: '{count} items are at or below their reorder point',
+    lowStockSummaryOne: '1 item is at or below its reorder point',
+    criticalCount: '{count} critical',
+    reviewRestocking: 'Review restocking',
+    dismiss: 'Dismiss alert',
+    navBadge: '{count} low-stock alerts'
+  },
   // Restocking
   restocking: {
     title: 'Restocking',
