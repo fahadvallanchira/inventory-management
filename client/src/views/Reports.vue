@@ -393,7 +393,7 @@ export default {
 
 .bar {
   width: 100%;
-  background: linear-gradient(to top, var(--info), #60a5fa);
+  background: linear-gradient(to top, var(--accent), #fdba74);
   border-radius: 4px 4px 0 0;
   transition: all 0.3s;
   cursor: pointer;

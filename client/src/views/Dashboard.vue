@@ -111,7 +111,7 @@
                     cy="100"
                     r="65"
                     fill="none"
-                    stroke="#10b981"
+                    style="stroke: var(--chart-delivered)"
                     stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.delivered)} 408`"
                     stroke-dashoffset="0"
@@ -122,7 +122,7 @@
                     cy="100"
                     r="65"
                     fill="none"
-                    stroke="#3b82f6"
+                    style="stroke: var(--chart-shipped)"
                     stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.shipped)} 408`"
                     :stroke-dashoffset="`-${getCircleSegment(statusData.delivered)}`"
@@ -133,7 +133,7 @@
                     cy="100"
                     r="65"
                     fill="none"
-                    stroke="#f59e0b"
+                    style="stroke: var(--chart-processing)"
                     stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.processing)} 408`"
                     :stroke-dashoffset="`-${getCircleSegment(statusData.delivered) + getCircleSegment(statusData.shipped)}`"
@@ -144,7 +144,7 @@
                     cy="100"
                     r="65"
                     fill="none"
-                    stroke="#ef4444"
+                    style="stroke: var(--chart-backordered)"
                     stroke-width="25"
                     :stroke-dasharray="`${getCircleSegment(statusData.backordered)} 408`"
                     :stroke-dashoffset="`-${getCircleSegment(statusData.delivered) + getCircleSegment(statusData.shipped) + getCircleSegment(statusData.processing)}`"
@@ -159,16 +159,16 @@
                 </svg>
                 <div class="donut-legend-compact">
                   <div class="legend-item-compact">
-                    <span class="legend-dot" style="background: #10b981"></span>{{ t('status.delivered') }}
+                    <span class="legend-dot" style="background: var(--chart-delivered)"></span>{{ t('status.delivered') }}
                   </div>
                   <div class="legend-item-compact">
-                    <span class="legend-dot" style="background: #3b82f6"></span>{{ t('status.shipped') }}
+                    <span class="legend-dot" style="background: var(--chart-shipped)"></span>{{ t('status.shipped') }}
                   </div>
                   <div class="legend-item-compact">
-                    <span class="legend-dot" style="background: #f59e0b"></span>{{ t('status.processing') }}
+                    <span class="legend-dot" style="background: var(--chart-processing)"></span>{{ t('status.processing') }}
                   </div>
                   <div class="legend-item-compact">
-                    <span class="legend-dot" style="background: #ef4444"></span>{{ t('status.backordered') }}
+                    <span class="legend-dot" style="background: var(--chart-backordered)"></span>{{ t('status.backordered') }}
                   </div>
                 </div>
               </div>
@@ -286,7 +286,7 @@
                     </span>
                   </td>
                   <td @click="showBacklogDetail(item)" style="cursor: pointer">
-                    <span :style="{ color: item.days_delayed > 7 ? '#ef4444' : '#f59e0b', fontWeight: 600 }">
+                    <span :style="{ color: item.days_delayed > 7 ? 'var(--danger)' : 'var(--warning)', fontWeight: 600 }">
                       {{ item.days_delayed }} {{ t('dashboard.inventoryShortages.days') }}
                     </span>
                   </td>
@@ -477,7 +477,7 @@ export default {
       const categoryMap = {}
 
       // Use a single neutral slate/gray color for all categories
-      const singleColor = '#64748b' // Neutral slate gray color
+      const singleColor = 'var(--chart-neutral)' // Neutral slate gray color
 
       // Get SKUs from orders in the filtered time period
       const orderedSkus = new Set()
@@ -1224,7 +1224,7 @@ export default {
 .task-add-btn {
   padding: var(--space-3) var(--space-6);
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%);
-  color: white;
+  color: var(--on-accent);
   border: none;
   border-radius: var(--radius);
   font-weight: 600;
@@ -1346,7 +1346,7 @@ export default {
 }
 
 .po-button.view:hover {
-  background: #475569;
+  background: var(--text-secondary);
   transform: translateY(-1px);
   box-shadow: 0 2px 4px rgba(100, 116, 139, 0.3);
 }

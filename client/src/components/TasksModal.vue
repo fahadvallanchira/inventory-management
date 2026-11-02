@@ -399,7 +399,7 @@ label {
 .task-add-btn {
   padding: 0.75rem 1.75rem;
   background: linear-gradient(135deg, var(--accent) 0%, var(--accent) 100%);
-  color: white;
+  color: var(--on-accent);
   border: none;
   border-radius: 8px;
   font-weight: 600;

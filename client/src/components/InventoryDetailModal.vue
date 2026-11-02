@@ -61,7 +61,7 @@
               <div class="info-item">
                 <div class="info-label">Units Remaining</div>
                 <div class="info-value">
-                  <span :style="{ color: inventoryItem.quantity_on_hand <= inventoryItem.reorder_point ? '#ef4444' : '#10b981' }">
+                  <span :style="{ color: inventoryItem.quantity_on_hand <= inventoryItem.reorder_point ? 'var(--danger)' : 'var(--success)' }">
                     {{ inventoryItem.quantity_on_hand - inventoryItem.reorder_point }} units
                   </span>
                 </div>

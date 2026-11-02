@@ -111,7 +111,7 @@ onMounted(loadAlerts)
   flex-shrink: 0;
   font-size: 14px;
   font-weight: 600;
-  color: var(--accent);
+  color: var(--accent-ink);
   text-decoration: none;
 }
 

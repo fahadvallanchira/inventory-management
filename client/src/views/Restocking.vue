@@ -341,7 +341,7 @@ export default {
 
 .budget-slider {
   width: 100%;
-  accent-color: var(--info);
+  accent-color: var(--accent);
   margin: var(--space-2) 0 var(--space-1);
 }
 
@@ -360,7 +360,7 @@ export default {
 
 .confirmation {
   background: var(--success-soft);
-  border: 1px solid #bbf7d0;
+  border: 1px solid var(--success-tint);
   color: var(--success-ink);
   padding: var(--space-4) 1.25rem;
   border-radius: var(--radius);
@@ -428,8 +428,8 @@ export default {
 }
 
 .qty-input:focus {
-  outline: 2px solid #bfdbfe;
-  border-color: var(--info);
+  outline: 2px solid var(--accent-soft);
+  border-color: var(--accent);
 }
 
 .order-actions {
@@ -448,7 +448,7 @@ export default {
 .warning-text {
   align-self: stretch;
   background: var(--warning-soft);
-  border: 1px solid #fde68a;
+  border: 1px solid var(--warning-tint);
   color: var(--warning-ink);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius);

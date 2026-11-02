@@ -95,7 +95,9 @@ There is no linter, type checker, or frontend test suite configured.
 - Area-specific guidance: `client/CLAUDE.md`, `server/CLAUDE.md`
 
 ## Design System
-- Colors: Slate/gray (#0f172a, #64748b, #e2e8f0)
-- Status: green/blue/yellow/red
-- Charts: Custom SVG, CSS Grid for layouts
+- Theme: dark navy + orange. All colors are CSS variables defined in `client/src/App.vue` (`:root` for light, `:root[data-theme='dark']` for dark); never hardcode hex in components
+- Navy (#0b1b3a, #12264d): text and structure in light theme, sidebar in both themes (`--nav-*` tokens), card/page surfaces in dark theme (#0f1f40 surface, #07122a page)
+- Orange (#f97316, `--accent`): primary buttons, active nav indicator, nav count badge, table header rule, focus rings, brand chart series. Text on an orange fill uses navy (`--on-accent`); orange used as text uses `--accent-ink` (#c2410c light, #fb923c dark) for contrast
+- Status stays distinct from the accent: green `--success`, blue `--info`, yellow `--warning` (a true yellow, not amber), red `--danger`; each has `-soft`/`-tint`/`-ink` variants. Chart series use `--chart-*` tokens
+- Charts: Custom SVG, CSS Grid for layouts; use `var(--token)` via `style`/CSS (not hex)
 - No emojis in UI
