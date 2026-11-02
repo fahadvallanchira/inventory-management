@@ -2,7 +2,7 @@
 
 ## Test Coverage Overview
 
-All backend API tests are passing with **55 tests** covering the entire application functionality.
+All backend API tests are passing with **81 tests** covering the entire application functionality.
 
 ## Test Suites
 
@@ -66,7 +66,16 @@ All backend API tests are passing with **55 tests** covering the entire applicat
 - ✅ Get category spending
 - ✅ Get recent transactions
 
-### 7. Root Endpoint (2 tests)
+### 7. Edge Cases (28 tests, `test_edge_cases.py`)
+- ✅ Unknown/malformed quarters return unfiltered data; `Q1-2025` only returns Jan-Mar orders
+- ✅ Quarters partition 2025 orders; `month=all`/empty and nonexistent months
+- ✅ Invalid IDs and unknown/unimplemented routes return 404
+- ✅ `all` filter value on inventory, orders and dashboard
+- ✅ Case sensitivity (category/status insensitive, warehouse exact)
+- ✅ Empty results for unknown values and conflicting combined filters; zeroed dashboard
+- ✅ Filtering does not mutate global data
+
+### 8. Root Endpoint (2 tests)
 - ✅ Root endpoint returns API info
 - ✅ Message and version structure
 
@@ -97,12 +106,12 @@ Recent additions are fully tested:
 
 ```bash
 cd tests
-python -m pytest backend/ -v
+uv run --project ../server pytest --cov
 ```
 
 ## Test Results
-- **Total Tests**: 55
-- **Passed**: 55 ✅
+- **Total Tests**: 81
+- **Passed**: 81 ✅
 - **Failed**: 0
 - **Warnings**: 3 (configuration-related, non-critical)
 
