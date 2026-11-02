@@ -15,6 +15,14 @@
         <router-link v-for="item in navItems" :key="item.to" :to="item.to" class="nav-item" :title="t(item.labelKey)">
           <NavIcon :name="item.icon" />
           <span class="nav-label">{{ t(item.labelKey) }}</span>
+          <!-- Count badge; hidden at zero. Not tied to banner dismissal. -->
+          <span
+            v-if="item.badge && alertCount > 0"
+            class="nav-badge"
+            :class="{ 'is-critical': alertCriticalCount > 0 }"
+            :aria-label="t('alerts.navBadge', { count: alertCount })"
+            >{{ alertCount }}</span
+          >
         </router-link>
       </nav>
 
@@ -117,6 +125,7 @@ import ProfileDetailsModal from './components/ProfileDetailsModal.vue'
 import TasksModal from './components/TasksModal.vue'
 import LanguageSwitcher from './components/LanguageSwitcher.vue'
 import NavIcon from './components/NavIcon.vue'
+import { useLowStockAlerts } from './composables/useLowStockAlerts'
 
 export default {
   name: 'App',
@@ -132,6 +141,8 @@ export default {
     const { currentUser } = useAuth()
     const { t } = useI18n()
     const { isDark, toggleTheme } = useTheme()
+    const { count: alertCount, criticalCount: alertCriticalCount, loadAlerts } = useLowStockAlerts()
+    onMounted(loadAlerts)
     const themeLabel = computed(() => (isDark.value ? t('nav.switchToLight') : t('nav.switchToDark')))
     const showProfileDetails = ref(false)
     const showTasks = ref(false)
@@ -148,7 +159,7 @@ export default {
       { to: '/orders', labelKey: 'nav.orders', icon: 'orders' },
       { to: '/spending', labelKey: 'nav.finance', icon: 'finance' },
       { to: '/demand', labelKey: 'nav.demandForecast', icon: 'demand' },
-      { to: '/restocking', labelKey: 'nav.restocking', icon: 'restocking' },
+      { to: '/restocking', labelKey: 'nav.restocking', icon: 'restocking', badge: true },
       { to: '/reports', labelKey: 'nav.reports', icon: 'reports' }
     ]
 
@@ -269,6 +280,8 @@ export default {
     return {
       t,
       navItems,
+      alertCount,
+      alertCriticalCount,
       collapsed,
       toggleLabel,
       toggleSidebar,
@@ -490,6 +503,35 @@ body {
   transition:
     background-color 0.15s ease,
     color 0.15s ease;
+}
+
+.nav-badge {
+  margin-left: auto;
+  min-width: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--warning-soft);
+  color: var(--warning-ink);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 20px;
+  text-align: center;
+}
+
+.nav-badge.is-critical {
+  background: var(--danger-soft);
+  color: var(--danger-ink);
+}
+
+/* Collapsed rail has no room beside the icon, so pin a smaller badge to the corner */
+.is-collapsed .nav-badge {
+  position: absolute;
+  top: 2px;
+  right: 6px;
+  min-width: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 16px;
 }
 
 .nav-item .nav-icon {

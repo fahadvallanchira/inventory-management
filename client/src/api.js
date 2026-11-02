@@ -18,6 +18,15 @@ export const api = {
     return response.data
   },
 
+  async getLowStockAlerts(filters = {}) {
+    const params = new URLSearchParams()
+    if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
+    if (filters.category && filters.category !== 'all') params.append('category', filters.category)
+
+    const response = await axios.get(`${API_BASE_URL}/alerts/low-stock?${params.toString()}`)
+    return response.data
+  },
+
   async getSuppliers() {
     const response = await axios.get(`${API_BASE_URL}/suppliers`)
     return response.data

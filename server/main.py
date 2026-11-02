@@ -189,6 +189,63 @@ def get_inventory(
         items = [item for item in items if item.get('supplier_id') == supplier]
     return items
 
+class LowStockAlert(BaseModel):
+    id: str
+    sku: str
+    name: str
+    quantity: int
+    reorder_point: int
+    warehouse: str
+    category: str
+    supplier_name: Optional[str] = None
+    severity: str  # 'critical' | 'warning'
+
+class LowStockAlertsResponse(BaseModel):
+    count: int
+    critical_count: int
+    items: List[LowStockAlert]
+
+@app.get("/api/alerts/low-stock", response_model=LowStockAlertsResponse)
+def get_low_stock_alerts(
+    warehouse: Optional[str] = None,
+    category: Optional[str] = None
+):
+    """Items at or below their reorder point, most severe first"""
+    items = apply_filters(inventory_items, warehouse, category)
+    supplier_names = {s["id"]: s["name"] for s in suppliers}
+
+    alerts = []
+    for item in items:
+        qty, reorder = item["quantity_on_hand"], item["reorder_point"]
+        if qty > reorder:
+            continue
+        # Critical when stocked out or at/below half the reorder point.
+        # Comparing qty * 2 <= reorder avoids float math; qty == 0 is checked
+        # explicitly so items with reorder_point 0 and no stock still count.
+        severity = "critical" if qty == 0 or qty * 2 <= reorder else "warning"
+        alerts.append({
+            "id": item["id"],
+            "sku": item["sku"],
+            "name": item["name"],
+            "quantity": qty,
+            "reorder_point": reorder,
+            "warehouse": item["warehouse"],
+            "category": item["category"],
+            # supplier_id is optional on inventory; fall back to None
+            "supplier_name": supplier_names.get(item.get("supplier_id")),
+            "severity": severity,
+        })
+
+    # Sort: critical before warning, then lowest stock-to-reorder ratio first.
+    # max(reorder, 1) guards against division by zero for reorder_point == 0.
+    alerts.sort(key=lambda a: (a["severity"] != "critical", a["quantity"] / max(a["reorder_point"], 1)))
+
+    return {
+        "count": len(alerts),
+        "critical_count": sum(1 for a in alerts if a["severity"] == "critical"),
+        "items": alerts,
+    }
+
 @app.get("/api/suppliers", response_model=List[Supplier])
 def get_suppliers():
     """Get all suppliers"""

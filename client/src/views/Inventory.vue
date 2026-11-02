@@ -5,6 +5,8 @@
       <p>{{ t('inventory.description') }}</p>
     </div>
 
+    <LowStockBanner />
+
     <div v-if="loading" class="loading">{{ t('common.loading') }}</div>
     <div v-else-if="error" class="error">{{ error }}</div>
     <div v-else>
@@ -105,11 +107,13 @@ import { ref, onMounted, watch, computed } from 'vue'
 import { api } from '../api'
 import { useFilters } from '../composables/useFilters'
 import { useI18n } from '../composables/useI18n'
+import LowStockBanner from '../components/LowStockBanner.vue'
 import InventoryDetailModal from '../components/InventoryDetailModal.vue'
 
 export default {
   name: 'Inventory',
   components: {
+    LowStockBanner,
     InventoryDetailModal
   },
   setup() {

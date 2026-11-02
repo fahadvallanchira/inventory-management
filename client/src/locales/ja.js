@@ -214,6 +214,16 @@ export default {
     }
   },
 
+  // 低在庫アラート（バナーとナビバッジ）
+  alerts: {
+    lowStockTitle: '低在庫アラート',
+    lowStockSummary: '{count}件の品目が発注点以下です',
+    lowStockSummaryOne: '1件の品目が発注点以下です',
+    criticalCount: '緊急 {count}件',
+    reviewRestocking: '補充発注を確認',
+    dismiss: 'アラートを閉じる',
+    navBadge: '低在庫アラート {count}件'
+  },
   // 補充発注
   restocking: {
     title: '補充発注',
