@@ -303,32 +303,51 @@ export default {
 /* ---------- Design tokens: the only place raw values live ---------- */
 :root {
   /* color */
-  --bg: #f8fafc;
+  /* Palette: navy (structure, text, dark surfaces) + orange (brand accent). Status colors stay
+     green/blue/yellow/red; warning is a true yellow (not amber) so it never reads as the orange accent. */
+  --navy-900: #0b1b3a;
+  --navy-700: #12264d;
+  --orange-500: #f97316;
+  --bg: #f3f5fa;
   --surface: #ffffff;
-  --border: #e2e8f0;
-  --text: #0f172a;
-  --text-muted: #64748b;
-  --accent: #4f46e5;
-  --accent-soft: #eef2ff;
+  --border: #dbe2ee;
+  --text: #0b1b3a;
+  --text-muted: #55627a;
+  --accent: #f97316; /* fills: buttons, bars, active indicators */
+  --accent-ink: #c2410c; /* orange used as TEXT on light surfaces (5.2:1 on white) */
+  --accent-soft: #fff1e6;
+  --on-accent: #0b1b3a; /* text on an orange fill; white on #f97316 is only 2.8:1 */
   --success: #16a34a;
   --info: #2563eb;
-  --warning: #d97706;
+  --warning: #ca8a04; /* graphics/large text; small warning text uses --warning-ink */
   --danger: #dc2626;
+  /* Sidebar is navy in both themes */
+  --nav-bg: #0b1b3a;
+  --nav-border: rgba(255, 255, 255, 0.1);
+  --nav-text: #b6c2da;
+  --nav-text-strong: #ffffff;
+  --nav-hover: rgba(255, 255, 255, 0.08);
+  --nav-active-bg: rgba(249, 115, 22, 0.18);
+  --nav-active-text: #fdba74;
+  /* Chart series (status-coded charts reuse the status hues) */
+  --chart-delivered: #16a34a;
+  --chart-shipped: #2563eb;
+  --chart-processing: #eab308;
+  --chart-backordered: #dc2626;
+  --chart-neutral: #64748b;
   /* Tinted backgrounds for status badges (derived from the status colors above) */
   --success-soft: #dcfce7;
   --info-soft: #dbeafe;
-  --warning-soft: #fef3c7;
+  --warning-soft: #fef9c3;
   --danger-soft: #fee2e2;
-  /* Neutrals and status tints that used to be hardcoded hex in components. Light values are the
-     original hex so the light theme is unchanged; dark values are overridden below. */
-  --border-strong: #cbd5e1;
-  --text-faint: #94a3b8;
-  --text-secondary: #475569;
+  --border-strong: #c3cde0;
+  --text-faint: #8493ad;
+  --text-secondary: #3f4d68;
   --success-tint: #d1fae5;
-  --warning-tint: #fed7aa;
+  --warning-tint: #fde68a;
   --danger-tint: #fecaca;
   --success-ink: #065f46;
-  --warning-ink: #92400e;
+  --warning-ink: #854d0e;
   --danger-ink: #991b1b;
   --info-ink: #1e40af;
   color-scheme: light;
@@ -342,42 +361,48 @@ export default {
   /* shape */
   --radius: 10px;
   --radius-sm: 6px;
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
-  --shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-sm: 0 1px 2px rgba(11, 27, 58, 0.08);
+  --shadow-md: 0 4px 12px rgba(11, 27, 58, 0.1);
   /* layout */
   --sidebar-width: 240px;
   --sidebar-width-collapsed: 64px;
 }
 
-/* Dark theme: only the color tokens change; spacing/shape/layout tokens are inherited from :root.
-   Accent stays a mid-tone indigo so white text on .btn-primary keeps adequate contrast, while
-   status colors are lightened so they stay legible on dark surfaces. Soft tints become
-   translucent so they sit on any surface instead of glowing as pastel blocks. */
+/* Dark theme: navy surfaces, lighter orange for text, lightened status colors. */
 :root[data-theme='dark'] {
   color-scheme: dark; /* native form controls, scrollbars and autofill follow the theme */
-  --bg: #020617;
-  --surface: #0f172a;
-  --border: #1e293b;
-  --text: #e2e8f0;
-  --text-muted: #94a3b8;
-  --accent: #6366f1;
-  --accent-soft: rgba(99, 102, 241, 0.16);
+  --bg: #07122a;
+  --surface: #0f1f40;
+  --border: #223660;
+  --text: #e6ecf7;
+  --text-muted: #9fb0cd;
+  --accent: #f97316;
+  --accent-ink: #fb923c;
+  --accent-soft: rgba(249, 115, 22, 0.16);
+  --on-accent: #0b1b3a;
   --success: #4ade80;
   --info: #60a5fa;
-  --warning: #fbbf24;
+  --warning: #facc15;
   --danger: #f87171;
+  --nav-bg: #050e21;
+  --nav-border: rgba(255, 255, 255, 0.08);
+  --chart-delivered: #4ade80;
+  --chart-shipped: #60a5fa;
+  --chart-processing: #facc15;
+  --chart-backordered: #f87171;
+  --chart-neutral: #94a3b8;
   --success-soft: rgba(74, 222, 128, 0.15);
   --info-soft: rgba(96, 165, 250, 0.15);
-  --warning-soft: rgba(251, 191, 36, 0.15);
+  --warning-soft: rgba(250, 204, 21, 0.15);
   --danger-soft: rgba(248, 113, 113, 0.15);
-  --border-strong: #475569;
-  --text-faint: #64748b;
-  --text-secondary: #cbd5e1;
+  --border-strong: #3a5080;
+  --text-faint: #7488ad;
+  --text-secondary: #c3cee3;
   --success-tint: rgba(74, 222, 128, 0.18);
-  --warning-tint: rgba(251, 191, 36, 0.18);
+  --warning-tint: rgba(250, 204, 21, 0.18);
   --danger-tint: rgba(248, 113, 113, 0.18);
   --success-ink: #86efac;
-  --warning-ink: #fcd34d;
+  --warning-ink: #fde047;
   --danger-ink: #fca5a5;
   --info-ink: #93c5fd;
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -429,8 +454,8 @@ body {
   height: 100vh;
   display: flex;
   flex-direction: column;
-  background: var(--surface);
-  border-right: 1px solid var(--border);
+  background: var(--nav-bg);
+  border-right: 1px solid var(--nav-border);
   z-index: 100;
 }
 
@@ -450,8 +475,8 @@ body {
   justify-content: center;
   border-radius: var(--radius-sm);
   background: var(--accent);
-  color: #fff;
-  font-weight: 600;
+  color: var(--on-accent);
+  font-weight: 700;
   font-size: 16px;
 }
 
@@ -464,7 +489,7 @@ body {
 .brand-name {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text);
+  color: var(--nav-text-strong);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -472,7 +497,7 @@ body {
 
 .brand-subtitle {
   font-size: 12px;
-  color: var(--text-muted);
+  color: var(--nav-text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -496,7 +521,7 @@ body {
   height: 40px;
   padding: 0 var(--space-3);
   border-radius: var(--radius-sm);
-  color: var(--text-muted);
+  color: var(--nav-text);
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
@@ -510,17 +535,17 @@ body {
   min-width: 20px;
   padding: 0 6px;
   border-radius: 10px;
-  background: var(--warning-soft);
-  color: var(--warning-ink);
+  background: var(--accent);
+  color: var(--on-accent);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 700;
   line-height: 20px;
   text-align: center;
 }
 
 .nav-badge.is-critical {
-  background: var(--danger-soft);
-  color: var(--danger-ink);
+  background: var(--danger);
+  color: #fff;
 }
 
 /* Collapsed rail has no room beside the icon, so pin a smaller badge to the corner */
@@ -541,13 +566,13 @@ body {
 }
 
 .nav-item:hover {
-  background: var(--accent-soft);
-  color: var(--text);
+  background: var(--nav-hover);
+  color: var(--nav-text-strong);
 }
 
 .nav-item.router-link-exact-active {
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: var(--nav-active-bg);
+  color: var(--nav-active-text);
 }
 
 /* 3px accent bar so the active item is not signalled by color alone */
@@ -567,7 +592,7 @@ body {
   flex-direction: column;
   gap: var(--space-2);
   padding: var(--space-3);
-  border-top: 1px solid var(--border);
+  border-top: 1px solid var(--nav-border);
 }
 
 /* Toggle button: styled like a nav item but is a <button> */
@@ -581,7 +606,7 @@ body {
   border: none;
   border-radius: var(--radius-sm);
   background: none;
-  color: var(--text-muted);
+  color: var(--nav-text);
   font-family: inherit;
   font-size: 14px;
   font-weight: 500;
@@ -593,8 +618,8 @@ body {
 }
 
 .sidebar-toggle:hover {
-  background: var(--accent-soft);
-  color: var(--text);
+  background: var(--nav-hover);
+  color: var(--nav-text-strong);
 }
 
 .sidebar-toggle .nav-icon {
@@ -764,6 +789,7 @@ table {
 
 thead {
   background: var(--bg);
+  border-bottom: 2px solid var(--accent);
 }
 
 th {
@@ -812,7 +838,7 @@ tbody tr:hover {
 .badge.warning,
 .badge.medium {
   background: var(--warning-soft);
-  color: var(--warning);
+  color: var(--warning-ink);
 }
 
 .badge.danger,
@@ -830,7 +856,7 @@ tbody tr:hover {
 
 .badge.stable {
   background: var(--accent-soft);
-  color: var(--accent);
+  color: var(--accent-ink);
 }
 
 /* Global button looks. Views with their own .btn-* scoped rules keep working; these only supply defaults. */
@@ -847,8 +873,13 @@ tbody tr:hover {
 
 .btn-primary {
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
   border: 1px solid var(--accent);
+  font-weight: 600;
+}
+
+.btn-primary:hover {
+  filter: brightness(1.08);
 }
 
 .btn-secondary {

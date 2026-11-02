@@ -300,7 +300,7 @@ const close = () => {
 
 .cost-item.operational .cost-icon {
   background: var(--accent);
-  color: white;
+  color: var(--on-accent);
 }
 
 .cost-item.labor .cost-icon {
@@ -310,7 +310,7 @@ const close = () => {
 
 .cost-item.overhead .cost-icon {
   background: var(--warning);
-  color: white;
+  color: var(--on-accent);
 }
 
 .cost-info {
