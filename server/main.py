@@ -217,7 +217,8 @@ def get_low_stock_alerts(
     alerts = []
     for item in items:
         qty, reorder = item["quantity_on_hand"], item["reorder_point"]
-        if qty >= reorder:
+        # Skip only items strictly above the reorder point; items exactly AT it still alert.
+        if qty > reorder:
             continue
         # Critical when stocked out or at/below half the reorder point.
         # Comparing qty * 2 <= reorder avoids float math; qty == 0 is checked
