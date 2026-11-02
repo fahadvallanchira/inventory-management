@@ -3,6 +3,7 @@ export default {
   nav: {
     overview: 'Overview',
     inventory: 'Inventory',
+    suppliers: 'Suppliers',
     orders: 'Orders',
     finance: 'Finance',
     demandForecast: 'Demand Forecast',
@@ -103,7 +104,37 @@ export default {
       unitPrice: 'Unit Price',
       totalValue: 'Total Value',
       location: 'Location',
+      supplier: 'Supplier',
       status: 'Status'
+    }
+  },
+
+  // Suppliers
+  suppliers: {
+    title: 'Suppliers',
+    description: 'Review supplier performance and the items each supplier provides',
+    allSuppliers: 'All Suppliers',
+    loadError: 'Failed to load suppliers',
+    itemsLoadError: 'Failed to load supplied items',
+    noItems: 'This supplier currently supplies no items',
+    suppliedItems: 'Supplied Items',
+    contactDetails: 'Contact Details',
+    unknown: 'Unknown supplier',
+    leadTimeDays: '{count} days',
+    ratingOutOf: '{rating} / 5',
+    close: 'Close details',
+    status: {
+      active: 'Active',
+      inactive: 'Inactive'
+    },
+    table: {
+      name: 'Name',
+      country: 'Country',
+      leadTime: 'Lead Time',
+      rating: 'Rating',
+      itemsSupplied: 'Items Supplied',
+      status: 'Status',
+      contactEmail: 'Contact Email'
     }
   },
 

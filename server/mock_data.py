@@ -32,6 +32,9 @@ category_spending = spending_data['category_spending']
 # Load transactions
 recent_transactions = load_json_file('transactions.json')
 
+# Load suppliers (inventory items reference these via supplier_id)
+suppliers = load_json_file('suppliers.json')
+
 # Load purchase orders
 purchase_orders = load_json_file('purchase_orders.json')
 

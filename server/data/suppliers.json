@@ -1,0 +1,74 @@
+[
+  {
+    "id": "SUP-001",
+    "name": "Shenzhen Circuitry Co.",
+    "country": "China",
+    "contact_email": "sales@shenzhen-circuitry.example.com",
+    "lead_time_days": 21,
+    "rating": 4,
+    "active": true
+  },
+  {
+    "id": "SUP-002",
+    "name": "Kyoto Sensor Works",
+    "country": "Japan",
+    "contact_email": "orders@kyoto-sensor.example.com",
+    "lead_time_days": 10,
+    "rating": 5,
+    "active": true
+  },
+  {
+    "id": "SUP-003",
+    "name": "Rhein Mechatronik GmbH",
+    "country": "Germany",
+    "contact_email": "vertrieb@rhein-mechatronik.example.com",
+    "lead_time_days": 14,
+    "rating": 5,
+    "active": true
+  },
+  {
+    "id": "SUP-004",
+    "name": "Austin Embedded Systems",
+    "country": "United States",
+    "contact_email": "accounts@austin-embedded.example.com",
+    "lead_time_days": 7,
+    "rating": 4,
+    "active": true
+  },
+  {
+    "id": "SUP-005",
+    "name": "Pune Power Electronics",
+    "country": "India",
+    "contact_email": "export@pune-power.example.com",
+    "lead_time_days": 28,
+    "rating": 3,
+    "active": true
+  },
+  {
+    "id": "SUP-006",
+    "name": "Taipei Precision Components",
+    "country": "Taiwan",
+    "contact_email": "info@taipei-precision.example.com",
+    "lead_time_days": 12,
+    "rating": 4,
+    "active": true
+  },
+  {
+    "id": "SUP-007",
+    "name": "Penang Microsystems",
+    "country": "Malaysia",
+    "contact_email": "support@penang-micro.example.com",
+    "lead_time_days": 18,
+    "rating": 3,
+    "active": true
+  },
+  {
+    "id": "SUP-008",
+    "name": "Northern Lights Electronics",
+    "country": "Finland",
+    "contact_email": "hello@northern-lights.example.com",
+    "lead_time_days": 25,
+    "rating": 2,
+    "active": false
+  }
+]

@@ -7,6 +7,7 @@ export const api = {
     const params = new URLSearchParams()
     if (filters.warehouse && filters.warehouse !== 'all') params.append('warehouse', filters.warehouse)
     if (filters.category && filters.category !== 'all') params.append('category', filters.category)
+    if (filters.supplier && filters.supplier !== 'all') params.append('supplier', filters.supplier)
 
     const response = await axios.get(`${API_BASE_URL}/inventory?${params.toString()}`)
     return response.data
@@ -14,6 +15,16 @@ export const api = {
 
   async getInventoryItem(id) {
     const response = await axios.get(`${API_BASE_URL}/inventory/${id}`)
+    return response.data
+  },
+
+  async getSuppliers() {
+    const response = await axios.get(`${API_BASE_URL}/suppliers`)
+    return response.data
+  },
+
+  async getSupplier(id) {
+    const response = await axios.get(`${API_BASE_URL}/suppliers/${id}`)
     return response.data
   },
 

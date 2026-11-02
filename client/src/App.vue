@@ -144,6 +144,7 @@ export default {
     const navItems = [
       { to: '/', labelKey: 'nav.overview', icon: 'overview' },
       { to: '/inventory', labelKey: 'nav.inventory', icon: 'inventory' },
+      { to: '/suppliers', labelKey: 'nav.suppliers', icon: 'suppliers' },
       { to: '/orders', labelKey: 'nav.orders', icon: 'orders' },
       { to: '/spending', labelKey: 'nav.finance', icon: 'finance' },
       { to: '/demand', labelKey: 'nav.demandForecast', icon: 'demand' },
