@@ -12,7 +12,8 @@ tests/
 │   ├── test_inventory.py      # Inventory endpoint tests (10 tests)
 │   ├── test_orders.py         # Orders endpoint tests (15 tests)
 │   ├── test_dashboard.py      # Dashboard endpoint tests (13 tests)
-│   └── test_misc_endpoints.py # Demand, backlog, spending tests (13 tests)
+│   ├── test_misc_endpoints.py # Demand, backlog, spending tests
+│   └── test_edge_cases.py     # Filter/quarter/404 edge cases (28 tests)
 └── README.md           # This file
 ```
 
