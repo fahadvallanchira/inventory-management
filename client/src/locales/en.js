@@ -11,7 +11,9 @@ export default {
     companyName: 'Catalyst Components',
     subtitle: 'Inventory Management System',
     collapseSidebar: 'Collapse sidebar',
-    expandSidebar: 'Expand sidebar'
+    expandSidebar: 'Expand sidebar',
+    switchToDark: 'Switch to dark mode',
+    switchToLight: 'Switch to light mode'
   },
 
   // Dashboard

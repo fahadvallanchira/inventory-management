@@ -361,7 +361,7 @@ export default {
 .confirmation {
   background: var(--success-soft);
   border: 1px solid #bbf7d0;
-  color: #166534;
+  color: var(--success-ink);
   padding: var(--space-4) 1.25rem;
   border-radius: var(--radius);
   margin-bottom: var(--space-6);
@@ -414,7 +414,7 @@ export default {
 }
 
 .unselected td {
-  color: #94a3b8;
+  color: var(--text-faint);
 }
 
 .qty-input {
@@ -449,7 +449,7 @@ export default {
   align-self: stretch;
   background: var(--warning-soft);
   border: 1px solid #fde68a;
-  color: #92400e;
+  color: var(--warning-ink);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius);
   font-size: 0.875rem;
@@ -472,7 +472,7 @@ export default {
 }
 
 .place-order:disabled {
-  background: #cbd5e1;
+  background: var(--border-strong);
   cursor: not-allowed;
 }
 </style>

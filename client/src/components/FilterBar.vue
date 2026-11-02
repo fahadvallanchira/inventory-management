@@ -162,7 +162,7 @@ export default {
 }
 
 .filter-select:hover {
-  border-color: #94a3b8;
+  border-color: var(--border-strong);
 }
 
 .filter-select:focus-visible {
@@ -188,7 +188,7 @@ export default {
 
 .reset-filters-btn:hover:not(:disabled) {
   background: var(--bg);
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
   color: var(--text);
 }
 

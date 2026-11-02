@@ -263,7 +263,7 @@ const close = () => {
 
 .cost-item.operational {
   border-color: #c4b5fd;
-  background: #f5f3ff;
+  background: var(--accent-soft);
 }
 
 .cost-item.labor {
@@ -358,7 +358,7 @@ const close = () => {
 
 .btn-secondary:hover {
   background: var(--border);
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
 }
 
 /* Modal transition animations */

@@ -301,18 +301,18 @@ const getSummaryCardClass = () => {
 }
 
 .stock-badge.success {
-  background: #d1fae5;
-  color: #065f46;
+  background: var(--success-tint);
+  color: var(--success-ink);
 }
 
 .stock-badge.warning {
-  background: #fed7aa;
-  color: #92400e;
+  background: var(--warning-tint);
+  color: var(--warning-ink);
 }
 
 .stock-badge.danger {
-  background: #fecaca;
-  color: #991b1b;
+  background: var(--danger-tint);
+  color: var(--danger-ink);
 }
 
 .stock-summary {
@@ -335,16 +335,16 @@ const getSummaryCardClass = () => {
 
 .summary-card.success-card {
   border-color: #a7f3d0;
-  background: #d1fae5;
+  background: var(--success-tint);
 }
 
 .summary-card.warning-card {
-  border-color: #fed7aa;
+  border-color: var(--warning-tint);
   background: var(--warning-soft);
 }
 
 .summary-card.danger-card {
-  border-color: #fecaca;
+  border-color: var(--danger-tint);
   background: var(--danger-soft);
 }
 
@@ -424,7 +424,7 @@ const getSummaryCardClass = () => {
 
 .btn-secondary:hover {
   background: var(--border);
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
 }
 
 /* Modal transition animations */

@@ -118,7 +118,7 @@ const selectLanguage = (locale) => {
 
 .language-button:hover {
   background: var(--bg);
-  border-color: #cbd5e1;
+  border-color: var(--border-strong);
 }
 
 .globe-icon {

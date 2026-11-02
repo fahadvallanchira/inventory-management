@@ -625,7 +625,7 @@ export default {
   justify-content: space-between;
   padding-right: var(--space-4);
   font-size: 0.75rem;
-  color: #94a3b8;
+  color: var(--text-faint);
   border-right: 1px solid var(--border);
 }
 
@@ -790,7 +790,7 @@ export default {
   text-align: left;
   padding: 0.625rem var(--space-3);
   font-weight: 600;
-  color: #475569;
+  color: var(--text-secondary);
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;

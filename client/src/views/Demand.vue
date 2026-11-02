@@ -277,7 +277,7 @@ export default {
 }
 
 .increasing-card .trend-icon {
-  background: #d1fae5;
+  background: var(--success-tint);
   color: var(--success);
 }
 

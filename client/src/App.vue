@@ -12,13 +12,7 @@
 
       <nav class="sidebar-nav" aria-label="Main">
         <!-- Active state comes from router-link-exact-active (exact, so '/' is not active on every page) -->
-        <router-link
-          v-for="item in navItems"
-          :key="item.to"
-          :to="item.to"
-          class="nav-item"
-          :title="t(item.labelKey)"
-        >
+        <router-link v-for="item in navItems" :key="item.to" :to="item.to" class="nav-item" :title="t(item.labelKey)">
           <NavIcon :name="item.icon" />
           <span class="nav-label">{{ t(item.labelKey) }}</span>
         </router-link>
@@ -37,13 +31,50 @@
           @click="toggleSidebar"
         >
           <!-- Panel icon; the chevron flips direction via CSS when collapsed -->
-          <svg class="nav-icon toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-               stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <svg
+            class="nav-icon toggle-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
             <rect x="3" y="4" width="18" height="16" rx="2" />
             <path d="M9 4v16" />
             <path class="toggle-chevron" d="M16 9l-3 3 3 3" />
           </svg>
           <span class="nav-label">{{ toggleLabel }}</span>
+        </button>
+        <button
+          type="button"
+          class="sidebar-toggle theme-toggle"
+          :aria-label="themeLabel"
+          :title="themeLabel"
+          :aria-pressed="String(isDark)"
+          @click="toggleTheme"
+        >
+          <!-- Shows the mode you would switch TO: sun while dark, moon while light -->
+          <svg
+            class="nav-icon"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <template v-if="isDark">
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+              />
+            </template>
+            <path v-else d="M21 12.8A9 9 0 1111.2 3a7 7 0 009.8 9.8z" />
+          </svg>
+          <span class="nav-label">{{ themeLabel }}</span>
         </button>
         <LanguageSwitcher :collapsed="collapsed" />
         <ProfileMenu
@@ -61,10 +92,7 @@
       </main>
     </div>
 
-    <ProfileDetailsModal
-      :is-open="showProfileDetails"
-      @close="showProfileDetails = false"
-    />
+    <ProfileDetailsModal :is-open="showProfileDetails" @close="showProfileDetails = false" />
 
     <TasksModal
       :is-open="showTasks"
@@ -82,6 +110,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue'
 import { api } from './api'
 import { useAuth } from './composables/useAuth'
 import { useI18n } from './composables/useI18n'
+import { useTheme } from './composables/useTheme'
 import FilterBar from './components/FilterBar.vue'
 import ProfileMenu from './components/ProfileMenu.vue'
 import ProfileDetailsModal from './components/ProfileDetailsModal.vue'
@@ -102,6 +131,8 @@ export default {
   setup() {
     const { currentUser } = useAuth()
     const { t } = useI18n()
+    const { isDark, toggleTheme } = useTheme()
+    const themeLabel = computed(() => (isDark.value ? t('nav.switchToLight') : t('nav.switchToDark')))
     const showProfileDetails = ref(false)
     const showTasks = ref(false)
     const apiTasks = ref([])
@@ -147,9 +178,7 @@ export default {
     const userPref = ref(readStoredPref()) // true | false | null (no manual choice)
     const isNarrow = ref(false)
     const collapsed = computed(() => (userPref.value !== null ? userPref.value : isNarrow.value))
-    const toggleLabel = computed(() =>
-      collapsed.value ? t('nav.expandSidebar') : t('nav.collapseSidebar')
-    )
+    const toggleLabel = computed(() => (collapsed.value ? t('nav.expandSidebar') : t('nav.collapseSidebar')))
 
     const toggleSidebar = () => {
       userPref.value = !collapsed.value
@@ -157,7 +186,9 @@ export default {
     }
 
     let mql = null
-    const onMediaChange = (e) => { isNarrow.value = e.matches }
+    const onMediaChange = (e) => {
+      isNarrow.value = e.matches
+    }
     if (typeof window !== 'undefined' && typeof window.matchMedia === 'function') {
       mql = window.matchMedia(NARROW_QUERY)
       isNarrow.value = mql.matches // set before first render to avoid a flash of the wrong width
@@ -193,18 +224,18 @@ export default {
     const deleteTask = async (taskId) => {
       try {
         // Check if it's a mock task (from currentUser)
-        const isMockTask = currentUser.value.tasks.some(t => t.id === taskId)
+        const isMockTask = currentUser.value.tasks.some((t) => t.id === taskId)
 
         if (isMockTask) {
           // Remove from mock tasks
-          const index = currentUser.value.tasks.findIndex(t => t.id === taskId)
+          const index = currentUser.value.tasks.findIndex((t) => t.id === taskId)
           if (index !== -1) {
             currentUser.value.tasks.splice(index, 1)
           }
         } else {
           // Remove from API tasks
           await api.deleteTask(taskId)
-          apiTasks.value = apiTasks.value.filter(t => t.id !== taskId)
+          apiTasks.value = apiTasks.value.filter((t) => t.id !== taskId)
         }
       } catch (err) {
         console.error('Failed to delete task:', err)
@@ -214,7 +245,7 @@ export default {
     const toggleTask = async (taskId) => {
       try {
         // Check if it's a mock task (from currentUser)
-        const mockTask = currentUser.value.tasks.find(t => t.id === taskId)
+        const mockTask = currentUser.value.tasks.find((t) => t.id === taskId)
 
         if (mockTask) {
           // Toggle mock task status
@@ -222,7 +253,7 @@ export default {
         } else {
           // Toggle API task
           const updatedTask = await api.toggleTask(taskId)
-          const index = apiTasks.value.findIndex(t => t.id === taskId)
+          const index = apiTasks.value.findIndex((t) => t.id === taskId)
           if (index !== -1) {
             apiTasks.value[index] = updatedTask
           }
@@ -240,6 +271,9 @@ export default {
       collapsed,
       toggleLabel,
       toggleSidebar,
+      isDark,
+      themeLabel,
+      toggleTheme,
       showProfileDetails,
       showTasks,
       tasks,
@@ -271,6 +305,19 @@ export default {
   --info-soft: #dbeafe;
   --warning-soft: #fef3c7;
   --danger-soft: #fee2e2;
+  /* Neutrals and status tints that used to be hardcoded hex in components. Light values are the
+     original hex so the light theme is unchanged; dark values are overridden below. */
+  --border-strong: #cbd5e1;
+  --text-faint: #94a3b8;
+  --text-secondary: #475569;
+  --success-tint: #d1fae5;
+  --warning-tint: #fed7aa;
+  --danger-tint: #fecaca;
+  --success-ink: #065f46;
+  --warning-ink: #92400e;
+  --danger-ink: #991b1b;
+  --info-ink: #1e40af;
+  color-scheme: light;
   /* spacing: 4px base */
   --space-1: 4px;
   --space-2: 8px;
@@ -288,6 +335,41 @@ export default {
   --sidebar-width-collapsed: 64px;
 }
 
+/* Dark theme: only the color tokens change; spacing/shape/layout tokens are inherited from :root.
+   Accent stays a mid-tone indigo so white text on .btn-primary keeps adequate contrast, while
+   status colors are lightened so they stay legible on dark surfaces. Soft tints become
+   translucent so they sit on any surface instead of glowing as pastel blocks. */
+:root[data-theme='dark'] {
+  color-scheme: dark; /* native form controls, scrollbars and autofill follow the theme */
+  --bg: #020617;
+  --surface: #0f172a;
+  --border: #1e293b;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --accent: #6366f1;
+  --accent-soft: rgba(99, 102, 241, 0.16);
+  --success: #4ade80;
+  --info: #60a5fa;
+  --warning: #fbbf24;
+  --danger: #f87171;
+  --success-soft: rgba(74, 222, 128, 0.15);
+  --info-soft: rgba(96, 165, 250, 0.15);
+  --warning-soft: rgba(251, 191, 36, 0.15);
+  --danger-soft: rgba(248, 113, 113, 0.15);
+  --border-strong: #475569;
+  --text-faint: #64748b;
+  --text-secondary: #cbd5e1;
+  --success-tint: rgba(74, 222, 128, 0.18);
+  --warning-tint: rgba(251, 191, 36, 0.18);
+  --danger-tint: rgba(248, 113, 113, 0.18);
+  --success-ink: #86efac;
+  --warning-ink: #fcd34d;
+  --danger-ink: #fca5a5;
+  --info-ink: #93c5fd;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -295,7 +377,13 @@ export default {
 }
 
 body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
   font-size: 14px;
   background: var(--bg);
   color: var(--text);
@@ -398,7 +486,9 @@ body {
   text-decoration: none;
   font-size: 14px;
   font-weight: 500;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .nav-item .nav-icon {
@@ -454,7 +544,9 @@ body {
   font-weight: 500;
   white-space: nowrap;
   cursor: pointer;
-  transition: background-color 0.15s ease, color 0.15s ease;
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
 }
 
 .sidebar-toggle:hover {
@@ -581,10 +673,18 @@ body {
 }
 
 /* Status variants keep the card white and only tint the value (no colored card backgrounds) */
-.stat-card.warning .stat-value { color: var(--warning); }
-.stat-card.success .stat-value { color: var(--success); }
-.stat-card.danger .stat-value { color: var(--danger); }
-.stat-card.info .stat-value { color: var(--info); }
+.stat-card.warning .stat-value {
+  color: var(--warning);
+}
+.stat-card.success .stat-value {
+  color: var(--success);
+}
+.stat-card.danger .stat-value {
+  color: var(--danger);
+}
+.stat-card.info .stat-value {
+  color: var(--info);
+}
 
 .card {
   background: var(--surface);

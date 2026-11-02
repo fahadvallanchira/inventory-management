@@ -11,7 +11,9 @@ export default {
     companyName: '触媒コンポーネンツ',
     subtitle: '在庫管理システム',
     collapseSidebar: 'サイドバーを折りたたむ',
-    expandSidebar: 'サイドバーを展開'
+    expandSidebar: 'サイドバーを展開',
+    switchToDark: 'ダークモードに切り替え',
+    switchToLight: 'ライトモードに切り替え'
   },
 
   // Dashboard
